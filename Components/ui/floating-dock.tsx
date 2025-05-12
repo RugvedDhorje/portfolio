@@ -14,7 +14,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-
+import { Link } from "react-scroll";
 import { useRef, useState } from "react";
 
 export const FloatingDock = ({
@@ -22,7 +22,7 @@ export const FloatingDock = ({
   desktopClassName,
   mobileClassName,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { title: string; link: string; icon: React.ReactNode; href: string }[];
   desktopClassName?: string;
   mobileClassName?: string;
 }) => {
@@ -93,7 +93,7 @@ const FloatingDockDesktop = ({
   items,
   className,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { title: string; link: string; icon: React.ReactNode; href: string }[];
   className?: string;
 }) => {
   let mouseX = useMotionValue(Infinity);
@@ -118,11 +118,13 @@ function IconContainer({
   title,
   icon,
   href,
+  link,
 }: {
   mouseX: MotionValue;
   title: string;
   icon: React.ReactNode;
   href: string;
+  link: string;
 }) {
   let ref = useRef<HTMLDivElement>(null);
 
@@ -187,12 +189,36 @@ function IconContainer({
             </motion.div>
           )}
         </AnimatePresence>
-        <motion.div
-          style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center"
-        >
-          {icon}
-        </motion.div>
+        {href === "#" ? (
+          <Link
+            to={link}
+            smooth={true}
+            duration={500}
+            offset={-50}
+            className="cursor-pointer text-white"
+          >
+            <motion.div
+              style={{ width: widthIcon, height: heightIcon }}
+              className="flex items-center justify-center"
+            >
+              {icon}
+            </motion.div>
+          </Link>
+        ) : (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer text-white"
+          >
+            <motion.div
+              style={{ width: widthIcon, height: heightIcon }}
+              className="flex items-center justify-center"
+            >
+              {icon}
+            </motion.div>
+          </a>
+        )}
       </motion.div>
     </a>
   );
